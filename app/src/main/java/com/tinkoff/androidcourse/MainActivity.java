@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.tinkoff.androidcourse.recycler.ItemTouchHelperCallback;
 import com.tinkoff.androidcourse.recycler.RecyclerWithEmptyView;
+import com.tinkoff.androidcourse.recycler.SimpleDividerItemDecoration;
 import com.tinkoff.androidcourse.recycler.WorkersAdapter;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         workersRecyclerView = findViewById(R.id.recycler_view);
         workersRecyclerView.setEmptyView(findViewById(R.id.tv_empty_view));
+        workersRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

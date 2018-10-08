@@ -1,4 +1,4 @@
-package com.tinkoff.androidcourse;
+package com.tinkoff.androidcourse.recycler;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.tinkoff.androidcourse.R;
+import com.tinkoff.androidcourse.Worker;
 
 import java.util.List;
 
@@ -46,7 +49,17 @@ public class WorkersAdapter extends RecyclerView.Adapter<WorkersAdapter.WorkerVi
         return workers.size();
     }
 
-    public void addWorker(Worker worker) {
+    public void onItemMove(int fromPosition, int toPosition) {
+        workers.add(toPosition, workers.remove(fromPosition));
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public void onItemDismiss(int position) {
+        workers.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void addItem(Worker worker) {
         workers.add(worker);
         notifyItemInserted(workers.size() - 1);
     }

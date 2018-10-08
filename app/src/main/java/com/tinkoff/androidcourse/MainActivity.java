@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import com.tinkoff.androidcourse.recycler.ItemTouchHelperCallback;
+import com.tinkoff.androidcourse.recycler.RecyclerWithEmptyView;
+import com.tinkoff.androidcourse.recycler.WorkersAdapter;
 
 import java.util.List;
 
@@ -13,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int TEST_WORKERS_COUNT = 5;
 
-    private RecyclerView workersRecyclerView;
+    private RecyclerWithEmptyView workersRecyclerView;
     private WorkersAdapter workersAdapter;
 
     @Override
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         workersRecyclerView = findViewById(R.id.recycler_view);
+        workersRecyclerView.setEmptyView(findViewById(R.id.tv_empty_view));
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -31,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                  * Реализовать добавление тестовых работников
                  */
                 Worker worker = WorkerGenerator.generateWorker();
-                workersAdapter.addWorker(worker);
+                workersAdapter.addItem(worker);
                 workersRecyclerView.smoothScrollToPosition(workersAdapter.getItemCount());
             }
         });
@@ -48,5 +53,9 @@ public class MainActivity extends AppCompatActivity {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         workersRecyclerView.setLayoutManager(layoutManager);
+
+        ItemTouchHelperCallback callback = new ItemTouchHelperCallback(workersAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(workersRecyclerView);
     }
 }

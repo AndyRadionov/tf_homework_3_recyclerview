@@ -5,6 +5,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.tinkoff.androidcourse.recycler.ItemTouchHelperCallback;
@@ -31,16 +34,13 @@ public class MainActivity extends AppCompatActivity {
         workersRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /**
-                 * Реализовать добавление тестовых работников
-                 */
-                Worker worker = WorkerGenerator.generateWorker();
-                workersAdapter.addItem(worker);
-                workersRecyclerView.smoothScrollToPosition(workersAdapter.getItemCount());
-            }
+        fab.setOnClickListener(view -> {
+            /**
+             * Реализовать добавление тестовых работников
+             */
+            Worker worker = WorkerGenerator.generateWorker();
+            workersAdapter.addItem(worker);
+            workersRecyclerView.smoothScrollToPosition(workersAdapter.getItemCount());
         });
 
 
@@ -59,5 +59,21 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelperCallback callback = new ItemTouchHelperCallback(workersAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(workersRecyclerView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_new_list) {
+            workersAdapter.updateWorkersList(WorkerGenerator.generateWorkers(TEST_WORKERS_COUNT));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

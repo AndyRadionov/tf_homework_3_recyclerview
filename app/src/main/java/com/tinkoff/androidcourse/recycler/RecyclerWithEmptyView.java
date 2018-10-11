@@ -15,22 +15,21 @@ public class RecyclerWithEmptyView extends RecyclerView {
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            setVisibilityOnChange(positionStart, itemCount);
+            setVisibilityOnChange();
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            setVisibilityOnChange(positionStart, itemCount);
+            setVisibilityOnChange();
         }
 
-        private void setVisibilityOnChange(int positionStart, int itemCount) {
-            Adapter<?> adapter =  getAdapter();
-            if(adapter != null && emptyView != null) {
-                if(adapter.getItemCount() == 0) {
+        private void setVisibilityOnChange() {
+            Adapter<?> adapter = getAdapter();
+            if (adapter != null && emptyView != null) {
+                if (adapter.getItemCount() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
                     RecyclerWithEmptyView.this.setVisibility(View.INVISIBLE);
-                }
-                else {
+                } else {
                     emptyView.setVisibility(View.GONE);
                     RecyclerWithEmptyView.this.setVisibility(View.VISIBLE);
                 }
@@ -54,7 +53,7 @@ public class RecyclerWithEmptyView extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
 
-        if(adapter != null) {
+        if (adapter != null) {
             adapter.registerAdapterDataObserver(emptyObserver);
             emptyObserver.onItemRangeRemoved(0, adapter.getItemCount());
             emptyObserver.onItemRangeInserted(0, adapter.getItemCount());

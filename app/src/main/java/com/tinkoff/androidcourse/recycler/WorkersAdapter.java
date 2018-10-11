@@ -2,6 +2,7 @@ package com.tinkoff.androidcourse.recycler;
 
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,12 @@ import com.tinkoff.androidcourse.R;
 import com.tinkoff.androidcourse.Worker;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Andrey Radionov
@@ -20,6 +27,7 @@ import java.util.List;
 public class WorkersAdapter extends RecyclerView.Adapter<WorkersAdapter.WorkerViewHolder> {
 
     private final List<Worker> workers;
+    private Disposable diffDisposable;
 
     public WorkersAdapter(@NonNull final List<Worker> workers) {
         this.workers = workers;
@@ -62,6 +70,25 @@ public class WorkersAdapter extends RecyclerView.Adapter<WorkersAdapter.WorkerVi
     public void addItem(Worker worker) {
         workers.add(worker);
         notifyItemInserted(workers.size() - 1);
+    }
+
+    public void updateWorkersList(List<Worker> newWorkers) {
+        if (diffDisposable != null && diffDisposable.isDisposed()) {
+            diffDisposable.dispose();
+        }
+
+        diffDisposable = Single
+                .fromCallable(() -> {
+                    WorkersDiffCallback diffCallback = new WorkersDiffCallback(workers, newWorkers);
+                    return DiffUtil.calculateDiff(diffCallback, false);
+                })
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(diffResult -> {
+                    workers.clear();
+                    workers.addAll(newWorkers);
+                    diffResult.dispatchUpdatesTo(this);
+                });
     }
 
     static class WorkerViewHolder extends RecyclerView.ViewHolder {

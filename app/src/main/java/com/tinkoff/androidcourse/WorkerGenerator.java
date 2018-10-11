@@ -2,10 +2,14 @@ package com.tinkoff.androidcourse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorkerGenerator {
+    private static AtomicInteger lastId = new AtomicInteger();
     private static List<String> maleNames = new ArrayList<>(Arrays.asList("John", "Bill", "Bob", "Oliver", "Jack", "Harry", "George", "William", "Henry"));
     private static List<String> femaleNames = new ArrayList<>(Arrays.asList("Anna", "Emma", "Sophie", "Jessica", "Scarlett", "Molly", "Lucy", "Megan"));
     private static List<String> surnames = new ArrayList<>(Arrays.asList("Green", "Smith", "Taylor", "Brown", "Wilson", "Walker", "White", "Jackson", "Wood"));
@@ -16,6 +20,7 @@ public class WorkerGenerator {
     public static Worker generateWorker() {
         Worker worker = new Worker();
         Random randomGenerator = new Random();
+        worker.setId(lastId.incrementAndGet());
         int index = randomGenerator.nextInt(2);
         if (index == 0) {
             index = randomGenerator.nextInt(maleNames.size());

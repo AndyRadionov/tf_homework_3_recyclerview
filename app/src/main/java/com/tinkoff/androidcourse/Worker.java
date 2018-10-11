@@ -7,7 +7,6 @@ public class Worker {
     private String age;
     private String position;
 
-
     public int getId() {
         return id;
     }
@@ -46,5 +45,27 @@ public class Worker {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Worker worker = (Worker) o;
+        return id == worker.id &&
+                name.equals(worker.name) &&
+                photo.equals(worker.photo) &&
+                age.equals(worker.age) &&
+                position.equals(worker.position);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + photo.hashCode();
+        result = 31 * result + age.hashCode();
+        result = 31 * result + position.hashCode();
+        return result;
     }
 }
